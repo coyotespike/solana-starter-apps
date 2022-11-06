@@ -13,13 +13,13 @@ function AddressForm(props: { handler: (address: string) => void }) {
   };
 
   const handleAddressInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    event.persist();
     setValues((values) => ({
       ...values,
       address: event.target.value,
     }));
   };
 
+    // i don't see a styles.form in that css file. formField and formButton, yes.
   return (
     <div className={styles.Form}>
       <form onSubmit={handleSubmit}>
