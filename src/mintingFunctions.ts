@@ -1,4 +1,3 @@
-import { initializeKeypair } from "./initializeKeypair";
 import * as web3 from "@solana/web3.js";
 import * as token from "@solana/spl-token";
 
@@ -65,9 +64,7 @@ async function mintTokens(
     amount * 10 ** mintInfo.decimals
   );
 
-  console.log(
-    `Mint Token Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
-  );
+  return transactionSignature;
 }
 
 // UPDATE in CRUD :)

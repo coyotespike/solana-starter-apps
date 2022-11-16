@@ -4,14 +4,19 @@
     "description": "Starter template for a Solana client script",
     "main": "index.ts",
     "scripts": {
-        "start": "ts-node src/index.ts"
+        "check": "tsc --noEmit",
+        "start": "ts-node src/index.ts",
+        "lint": "eslint . --ext .ts"
     },
     "keywords": [],
     "author": "test",
     "license": "ISC",
     "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^5.43.0",
+        "@typescript-eslint/parser": "^5.43.0",
+        "eslint": "^8.27.0",
         "ts-node": "^10.8.0",
-        "typescript": "^4.6.4"
+        "typescript": "^4.8.0"
     },
     "dependencies": {
         "@metaplex-foundation/js": "^0.17.6",

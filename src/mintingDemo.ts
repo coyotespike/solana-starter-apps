@@ -1,14 +1,13 @@
 import { initializeKeypair } from "./initializeKeypair";
 import {
   createNewMint,
-  createTokenAccont,
+  createTokenAccount,
   mintTokens,
   transferTokens,
   burnTokens,
 } from "./mintingFunctions";
 
 import * as web3 from "@solana/web3.js";
-import * as token from "@solana/spl-token";
 
 async function main() {
   const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
@@ -36,6 +35,10 @@ async function main() {
     tokenAccount.address,
     user,
     100
+  );
+
+  console.log(
+    `Mint Token Transaction: https://explorer.solana.com/tx/${tokens}?cluster=devnet`
   );
 
   const receiver = web3.Keypair.generate().publicKey;
@@ -105,3 +108,5 @@ async function main() {
   );
   console.log(`Token balance: ${tokenBalance.value.uiAmount}`);
 }
+
+export default main;
