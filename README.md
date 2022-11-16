@@ -21,3 +21,5 @@ With a local repo, you can do:
 `git subtree add --prefix <new-directory> <path-to-directory> starter`
 
 That way you can hack locally to your heart's content, and don't have to create a new remote git repo when done.
+
+Of course, you can still run `npm i` and terminals locally! so it is a true monorepo

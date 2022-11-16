@@ -23,6 +23,27 @@ export class StudentIntro {
     return buffer.slice(0, this.studentIntroSchema.getSpan(buffer));
   }
 
+  static studentAccountSchema = borsh.struct([
+    borsh.bool("initialized"),
+    borsh.str("name"),
+    borsh.str("message"),
+  ]);
+
+  static deserialize(buffer: Buffer): StudentIntro {
+    if (!buffer) {
+      return null;
+    }
+    try {
+      const { name, message } = StudentIntro.studentAccountSchema.decode(
+        buffer
+      );
+      return new StudentIntro(name, message);
+    } catch (e) {
+      console.log("Deserialization error", error);
+      return null;
+    }
+  }
+
   static mocks: StudentIntro[] = [
     new StudentIntro(
       "Elizabeth Holmes",
