@@ -1,34 +1,38 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Demo app for a data account
 
-## Getting Started
+In other apps, we send a transaction that executes a program (calls a smart contract) but does not store data.
 
-First, run the development server:
+The simplest possible example is sending money - a native program, core to Solana.
 
-```bash
-npm run dev
-# or
-yarn dev
+The next example is incrementing a counter.
+
+On Solana, smart contracts (program accounts) don't store their own data. Rather they have an associated data account.
+
+Storing data therefore requires the data to be serialized (so Solana can move fast), and the data account info to be included in the transaction.
+
+This is kinda low-level but still pretty easy.
+
+Then we include the data in the Solana instruction we build, and put the instruction into the transaction and send, as before.
+
+After sending the transaction, the explorer shows this:
+```
+Unknown Program (CenYq6bDRB7p73EjsPEpiYN7uveyPUTdXkDkgUduboaN) Instruction
+> Program logged: "process_instruction: CenYq6bDRB7p73EjsPEpiYN7uveyPUTdXkDkgUduboaN: 3 accounts, data=[0, 6, 0, 0, 0, 66, 97, 116, 109, 97, 110, 3, 25, 0, 0, 0, 97, 32, 100, 97, 114, 107, 101, 114, 44, 32, 103, 114, 105, 116, 116, 105, 101, 114, 32, 66, 97, 116, 109, 97, 110]"
+> Program consumption: 176752 units remaining
+> Program logged: "Initialize movie rating account"
+> Program logged: "finding pda"
+> Program logged: "pda: qp6Acy7sBPuN2EnTADBQiQCAvocUGj21LDYoKmvgR9E"
+> Program logged: "initializing account at pda"
+> Program invoked: System Program
+  > Program returned success
+> Program logged: "Movie: Batman"
+> Program logged: "unpacking state account"
+> Program logged: "borrowed account data"
+> Program logged: "checking if user account is already initialized"
+> Program logged: "serializing account"
+> Program logged: "state account serialized"
+> Program consumption: 151705 units remaining
+> Program consumed: 48571 of 200000 compute units
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Amusingly, the Borsh library we use here appears to have been developed by Serum - from the infamous and defunct Alameda/FTX!!
