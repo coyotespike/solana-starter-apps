@@ -29,6 +29,32 @@ export class Movie {
     return buffer.slice(0, this.borshInstructionSchema.getSpan(buffer));
   }
 
+  // new schema, similar to the one above except has initalized not variant
+  static borshAccountSchema = borsh.struct([
+    borsh.bool("initialized"),
+    borsh.str("title"),
+    borsh.u8("rating"),
+    borsh.str("description"),
+  ]);
+
+  // we make it static so we can call it without creating an instance of the class
+  static deserialize(buffer: Buffer): Movie {
+    if (!buffer) {
+      // unsure if this is needed in TS
+      return null;
+    }
+    try {
+      const { title, rating, description } = this.borshAccountSchema.decode(
+        buffer
+      );
+      return new Movie(title, rating, description);
+    } catch (error) {
+      // if the account has no data in it we will get an error
+      console.log("Deserialization error", error);
+      return null;
+    }
+  }
+
   static mocks: Movie[] = [
     new Movie(
       "The Shawshank Redemption",
