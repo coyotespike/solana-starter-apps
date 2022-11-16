@@ -1,25 +1,41 @@
-import { Card } from './Card'
-import { FC, useEffect, useState } from 'react'
-import { Movie } from '../models/Movie'
+import { Card } from "./Card";
+import { FC, useEffect, useState } from "react";
+import * as web3 from "@solana/web3.js";
+import { Movie } from "../models/Movie";
 
-const MOVIE_REVIEW_PROGRAM_ID = 'CenYq6bDRB7p73EjsPEpiYN7uveyPUTdXkDkgUduboaN'
+const MOVIE_REVIEW_PROGRAM_ID = "CenYq6bDRB7p73EjsPEpiYN7uveyPUTdXkDkgUduboaN";
 
 export const MovieList: FC = () => {
-    const [movies, setMovies] = useState<Movie[]>([])
+  const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
+  const [movies, setMovies] = useState<Movie[]>([]);
 
-    useEffect(() => {
-        setMovies(Movie.mocks)
-    }, [])
-    
-    return (
-        <div>
-            {
-                movies.map((movie, i) => {
-                    return (
-                        <Card key={i} movie={movie} />
-                    )
-                })
+  useEffect(() => {
+    // no more mocks
+    // setMovies(Movie.mocks);
+
+    connection
+      .getProgramAccounts(new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID))
+      .then(async (accounts) => {
+        const movies: Movie[] = accounts.reduce(
+          (accum: Movie[], { pubkey, account }) => {
+            const movie = Movie.deserialize(account.data);
+            if (!movie) {
+              return accum;
+            } else {
+              return [...accum, movie];
             }
-        </div>
-    )
-}
+          },
+          []
+        );
+        setMovies(movies);
+      });
+  }, []);
+
+  return (
+    <div>
+      {movies.map((movie, i) => {
+        return <Card key={i} movie={movie} />;
+      })}
+    </div>
+  );
+};

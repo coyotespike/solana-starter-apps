@@ -1,5 +1,7 @@
 # Demo app for a data account
 
+
+## Storing Data
 In other apps, we send a transaction that executes a program (calls a smart contract) but does not store data.
 
 The simplest possible example is sending money - a native program, core to Solana.
@@ -36,3 +38,9 @@ Unknown Program (CenYq6bDRB7p73EjsPEpiYN7uveyPUTdXkDkgUduboaN) Instruction
 ```
 
 Amusingly, the Borsh library we use here appears to have been developed by Serum - from the infamous and defunct Alameda/FTX!!
+
+## Reading and Deserializing
+
+Interestingly, although we use both the program ID and the movie title to CREATE the account address, the program knows all the addresses associated with it. We don't need the title to RECOVER the generated address.
+
+i.e. `connection.getProgramAccounts(new web3.PublicKey(MOVIE_REVIEW_PROGRAM_ID))` works.

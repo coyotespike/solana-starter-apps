@@ -30,10 +30,14 @@ export class Movie {
   }
 
   // new schema, similar to the one above except has initalized not variant
+  // also note title and rating have switched places!!
+  // placing them as in the original resulted in RangeError: Trying to access beyond buffer length     at checkOffset
+  // very puzzling
+
   static borshAccountSchema = borsh.struct([
     borsh.bool("initialized"),
-    borsh.str("title"),
     borsh.u8("rating"),
+    borsh.str("title"),
     borsh.str("description"),
   ]);
 
