@@ -1,34 +1,32 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Another data account demo
 
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
+This builds on the movies app. This time the program uses only the public key of the caller wallet to generate the data account, note only publicKey.toBuffer() in the array below:
+```
+// once again we must figure out the address of the data account
+    const [pda] = await web3.PublicKey.findProgramAddress(
+      [publicKey.toBuffer()],
+      new web3.PublicKey(STUDENT_INTRO_PROGRAM_ID)
+    );
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Interestingly the wallet will not provide an estimate of gas if the call is invalid.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+```
+> Program logged: "process_instruction: HdE95RSVsdb315jfJtaykXhXY478h53X6okDupVfY9yf: 3 accounts, data=[0, 3, 0, 0, 0, 83, 66, 70, 21, 0, 0, 0, 108, 111, 115, 105, 110, 32, 49, 53, 32, 98, 105, 108, 108, 105, 111, 110, 44, 32, 110, 98, 100]"
+> Program consumption: 178699 units remaining
+> Program logged: "Initialize with user input"
+> Program logged: "finding pda"
+> Program logged: "pda: 7jETuuDKqvvc9Zz7xWCmWsirGzwYe5Hb9jxrnvWMgvgx"
+> Program logged: "initializing account at pda"
+> Program invoked: System Program
+  > Program returned success
+> Program logged: "User name: SBF"
+> Program logged: "unpacking state account"
+> Program logged: "borrowed account data"
+> Program logged: "checking if user account is already initialized"
+> Program logged: "serializing account"
+> Program logged: "state account serialized"
+> Program consumption: 153763 units remaining
+> Program consumed: 46512 of 200000 compute units
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
