@@ -15,8 +15,6 @@ import {
   createUpdateMetadataAccountV2Instruction,
 } from "@metaplex-foundation/mpl-token-metadata";
 
-const assetPath = "assets/timCoin.jpeg";
-
 async function uploadFile(
   metaplex: Metaplex,
   { assetPath, name, symbol, description }: assetInfo
@@ -121,3 +119,5 @@ async function createTokenMetadata(
     `Create Metadata Account: https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
   );
 }
+
+export { createTokenMetadata };
