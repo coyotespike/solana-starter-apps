@@ -10,6 +10,8 @@ https://explorer.solana.com/address/Gwb6adtXkJ3A311gxZ24vnRDXd1gS2JmYb4oS74F9ocz
 
 Next, it uses Metaplex to create metadata for this token! Miraculously, it works!
 
+And we can use Metaplex-specific functions to make creating and updating NFTs even easier.
+
 
 ## TimCoin assets created
 image uri: https://arweave.net/qQqPU8e7yJEfCWftJ1w5PHJiTz29uQXIrF-fsMEij7g

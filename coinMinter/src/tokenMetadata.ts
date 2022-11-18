@@ -201,4 +201,9 @@ async function createTokenMetadata(
   );
 }
 
-export { createMetadataAccount, createTokenMetadata, updateTokenDescription };
+export {
+  createMetadataAccount,
+  createTokenMetadata,
+  updateTokenDescription,
+  uploadFile,
+};
