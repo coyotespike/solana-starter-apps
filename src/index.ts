@@ -1,7 +1,5 @@
 import { initializeKeypair } from "./initializeKeypair";
 import * as web3 from "@solana/web3.js";
-import * as token from "@solana/spl-token";
-import * as fs from "fs";
 
 import {
   Metaplex,
@@ -9,44 +7,84 @@ import {
   bundlrStorage,
 } from "@metaplex-foundation/js";
 
-import { createNewMint } from "./mintingFunctions";
-import { createTokenMetadata } from "./tokenMetadata";
+import {
+  createNewMint,
+  createTokenAccount,
+  getOrCreateAssociatedTokenAccount,
+  mintTokens,
+  transferToMe,
+} from "./mintingFunctions";
+import { assetInfo, createTokenMetadata } from "./tokenMetadata";
+import makeMetaplex from "./makeMetaplex";
 
-const assetPath = "assets/timCoin.jpeg";
+/**
+This function does the following:
+1. Creates a new mint
+2. Creates a metadata account for the mint
+3. Creates a token account for the mint, if it doesn't already exist
+4. Mints some tokens
+
+It therefore demonstrates a single instruction that does everything at once!
+**/
 
 async function main() {
   const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
   const user = await initializeKeypair(connection);
+  const metaplex = await makeMetaplex(connection, user);
 
-  const assetInfo = {
-    assetPath,
-    name: "TimCoin",
-    symbol: "TIM",
-    description: "TimCoin is a cryptocurrency created by Tim",
+  // log the user's wallet address
+  console.log("User wallet address:", user.publicKey.toBase58());
+
+  // create a new token mint
+
+  const mint = await createNewMint(
+    connection,
+    user, // payer
+    user.publicKey, // mint authority
+    user.publicKey, // freeze authority
+    2 // decimals
+  );
+
+  const newAsset: assetInfo = {
+    assetPath: "assets/austin.jpeg",
+    name: "AustinCoin",
+    symbol: "AUS",
+    description: "AustinCoin is a cryptocurrency",
   };
-
-  // metaplex setup
-  const metaplex = Metaplex.make(connection)
-    .use(keypairIdentity(user))
-    .use(
-      bundlrStorage({
-        address: "https://devnet.bundlr.network",
-        providerUrl: "https://api.devnet.solana.com",
-        timeout: 60000,
-      })
-    );
-
-  // this is from the first time I ran the code
-  const MINT_ADDRESS = "5n2PyML9sB6uMFuaursPxgZMLPmxYoSitJM4Qra5eb2J";
-  const mint = new web3.PublicKey(MINT_ADDRESS);
-
+  // create a metadata account for the token mint
+  // you actually must supply complete metadata to create the account
+  // so actually we will just make the token metadata
   const metadata = await createTokenMetadata(
     connection,
     metaplex,
     mint,
     user,
-    assetInfo
+    newAsset
   );
+
+  // create a token account
+  // try to add this instruction conditionally if you can
+  // I wrote a conditional function based on theirs and named it the same
+  const tokenAccount = await getOrCreateAssociatedTokenAccount(
+    connection,
+    user,
+    mint,
+    user.publicKey
+  );
+
+  // mint some tokens
+  const txSig = await mintTokens(
+    connection,
+    user,
+    mint,
+    tokenAccount.address,
+    user,
+    1000
+  );
+
+  // I want to be able to see the metadata in my wallet :)
+  // so I will transfer the tokens to myself
+  const txSig2 = await transferToMe(connection, user, mint, tokenAccount);
 }
 
 main()
