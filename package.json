@@ -5,6 +5,7 @@
     "main": "index.ts",
     "scripts": {
         "check": "tsc --noEmit",
+        "single": "ts-node $FILE",
         "start": "ts-node src/index.ts",
         "lint": "eslint . --ext .ts"
     },

@@ -15,10 +15,7 @@ import {
   createUpdateMetadataAccountV2Instruction,
 } from "@metaplex-foundation/mpl-token-metadata";
 
-async function uploadFile(
-  metaplex: Metaplex,
-  { assetPath, name, symbol, description }: assetInfo
-) {
+async function uploadImage(metaplex: Metaplex, assetPath: string) {
   // file to buffer
   const buffer = fs.readFileSync(assetPath);
 
@@ -28,7 +25,15 @@ async function uploadFile(
   // upload image and get image uri
   const imageUri = await metaplex.storage().upload(file);
   console.log("image uri:", imageUri);
+  return imageUri;
+}
 
+async function uploadMetadata(
+  metaplex: Metaplex,
+  name: string,
+  description: string,
+  imageUri: string
+) {
   // upload metadata and get metadata uri (off chain metadata)
   const { uri } = await metaplex.nfts().uploadMetadata({
     name: name,
@@ -40,7 +45,17 @@ async function uploadFile(
   return uri;
 }
 
-type assetInfo = {
+async function uploadFile(
+  metaplex: Metaplex,
+  { assetPath, name, symbol, description }: assetInfo
+) {
+  const imageUri = await uploadImage(metaplex, assetPath);
+  const uri = await uploadMetadata(metaplex, name, description, imageUri);
+
+  return uri;
+}
+
+export type assetInfo = {
   assetPath: string;
   name: string;
   symbol: string;
@@ -98,6 +113,72 @@ async function createMetadataAccount(
   return transactionSignature;
 }
 
+async function updateTokenDescription(
+  connection: web3.Connection,
+  metaplex: Metaplex,
+  mint: web3.PublicKey,
+  user: web3.Keypair,
+  assetInfo: assetInfo
+) {
+  // upload metadata and get metadata uri (off chain metadata)
+  // would be cool to get the token's metadata uri from the mint
+  // gonna hardcode it for now
+
+  console.log("starting token description update");
+  const imageURI =
+    "https://arweave.net/qQqPU8e7yJEfCWftJ1w5PHJiTz29uQXIrF-fsMEij7g";
+
+  const uri = await uploadMetadata(
+    metaplex,
+    assetInfo.name,
+    assetInfo.description,
+    imageURI
+  );
+
+  // onchain metadata format
+  const tokenMetadata = {
+    name: assetInfo.name,
+    symbol: assetInfo.symbol,
+    uri: uri,
+    sellerFeeBasisPoints: 0,
+    creators: null,
+    collection: null,
+    uses: null,
+  } as DataV2;
+
+  const metadataPDA = await findMetadataPda(mint);
+
+  // transaction to update metadata account
+  const transaction = new web3.Transaction().add(
+    createUpdateMetadataAccountV2Instruction(
+      {
+        metadata: metadataPDA,
+        updateAuthority: user.publicKey,
+      },
+      {
+        updateMetadataAccountArgsV2: {
+          data: tokenMetadata,
+          updateAuthority: user.publicKey,
+          primarySaleHappened: true,
+          isMutable: true,
+        },
+      }
+    )
+  );
+  // send transaction
+  const transactionSignature = await web3.sendAndConfirmTransaction(
+    connection,
+    transaction,
+    [user]
+  );
+
+  console.log(
+    `Successful. Update Metadata Account: https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
+  );
+
+  return transactionSignature;
+}
+
 async function createTokenMetadata(
   connection: web3.Connection,
   metaplex: Metaplex,
@@ -120,4 +201,4 @@ async function createTokenMetadata(
   );
 }
 
-export { createTokenMetadata };
+export { createMetadataAccount, createTokenMetadata, updateTokenDescription };
