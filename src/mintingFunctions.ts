@@ -45,6 +45,35 @@ async function createTokenAccount(
   return tokenAccount;
 }
 
+async function getOrCreateAssociatedTokenAccount(
+  connection: web3.Connection,
+  payer: web3.Keypair,
+  mint: web3.PublicKey,
+  owner: web3.PublicKey
+): Promise<token.Account> {
+  const tokenAddress = await token.getAssociatedTokenAddress(mint, owner);
+  let account: token.Account;
+
+  try {
+    account = await token.getAccount(connection, tokenAddress);
+  } catch (error) {
+    console.log(`failed to get account: ${error}`);
+    console.log(`creating account for ${tokenAddress}`);
+    const tx = await token.createAssociatedTokenAccount(
+      connection,
+      payer,
+      mint,
+      owner
+    );
+  }
+  account = await token.getAccount(connection, tokenAddress);
+  console.log(
+    `Token Account: https://explorer.solana.com/address/${account.address}?cluster=devnet`
+  );
+
+  return account;
+}
+
 async function mintTokens(
   connection: web3.Connection,
   payer: web3.Keypair,
@@ -62,6 +91,10 @@ async function mintTokens(
     destination,
     authority, // what is this?
     amount * 10 ** mintInfo.decimals
+  );
+
+  console.log(
+    `Mint Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
   );
 
   return transactionSignature;
@@ -116,10 +149,47 @@ async function burnTokens(
   );
 }
 
+async function transferToMe(
+  connection: web3.Connection,
+  user: web3.Keypair,
+  mint: web3.PublicKey,
+  sendingTokenAccount: token.Account
+) {
+  // I copied this from my in-browser PHantom wallet
+  const myWalletKey = new web3.PublicKey(
+    "Gwb6adtXkJ3A311gxZ24vnRDXd1gS2JmYb4oS74F9ocz"
+  );
+
+  // we can only transfer tokens between token accounts from the same mint
+  // to send to our wallet, therefore, we need to create a token account for our wallet
+  const myTokenAccount = await createTokenAccount(
+    connection,
+    user, // payer haha
+    mint,
+    myWalletKey // the owner of the token account
+  );
+
+  // after transfer, it will show in our wallet.
+  const transferToMe = await transferTokens(
+    connection,
+    user, // payer
+    sendingTokenAccount.address, // from
+    myTokenAccount.address, // destination
+    user.publicKey, // owner...idk should it be me?
+    10,
+    mint
+  );
+
+  const myBalance = await connection.getBalance(user.publicKey);
+  console.log(`My balance: ${myBalance}`);
+}
+
 export {
+  burnTokens,
   createNewMint,
   createTokenAccount,
+  getOrCreateAssociatedTokenAccount,
   mintTokens,
   transferTokens,
-  burnTokens,
+  transferToMe,
 };
