@@ -21,7 +21,7 @@ export const FetchCandyMachine: FC = () => {
 
     try {
       const candyMachine = await metaplex
-        .candyMachines()
+        .candyMachinesV2()
         .findByAddress({ address: new PublicKey(candyMachineAddress) });
 
       setCandyMachineData(candyMachine);
@@ -38,7 +38,7 @@ export const FetchCandyMachine: FC = () => {
     );
     let nftData = [];
     await Promise.all(
-      nfts.map(async (nft) => {
+      pageItems.map(async (nft) => {
         let fetchResult = await fetch(nft.uri);
         let json = await fetchResult.json();
         nftData.push(json);
@@ -67,7 +67,7 @@ export const FetchCandyMachine: FC = () => {
 
   // fetch items when candy machine data is available
   useEffect(() => {
-    if (!candyMachineData.items) {
+    if (!candyMachineData?.items) {
       return;
     }
     getPage(page, 10);
