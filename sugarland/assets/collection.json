@@ -1,0 +1,15 @@
+{
+    "name": "Founding Fathers Collection",
+    "symbol": "FOUND",
+    "description": "The Founding Fathers hanging out and looking fly",
+    "image": "collection.jpeg",
+    "attributes": [],
+    "properties": {
+        "files": [
+            {
+            "uri": "collection.jpeg",
+            "type": "image/jpeg"
+        }
+        ]
+    }
+}

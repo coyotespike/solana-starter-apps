@@ -1,0 +1,28 @@
+{
+    "name": "John Adams",
+    "symbol": "FOUND",
+    "description": "The Founding Fathers rocked.",
+    "image": "2.jpeg",
+    "attributes": [
+        {
+            "trait_type": "accessory",
+            "value": "laptop"
+        },
+        {
+            "trait_type": "chair",
+            "value": "blue"
+        },
+        {
+            "trait_type": "books",
+            "value": "white"
+        }
+    ],
+    "properties": {
+        "files": [
+            {
+                "uri": "2.jpeg",
+                "type": "image/jpeg"
+            }
+        ]
+    }
+}

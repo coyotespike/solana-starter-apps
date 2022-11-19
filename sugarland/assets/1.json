@@ -1,0 +1,28 @@
+{
+    "name": "Thomas Jefferson",
+    "symbol": "FOUND",
+    "description": "The Founding Fathers rocked.",
+    "image": "1.jpeg",
+    "attributes": [
+        {
+            "trait_type": "accessory",
+            "value": "pencil"
+        },
+        {
+            "trait_type": "accessory",
+            "value": "clipboard"
+        },
+        {
+            "trait_type": "books",
+            "value": "purple"
+        }
+    ],
+    "properties": {
+        "files": [
+            {
+                "uri": "1.jpeg",
+                "type": "image/jpeg"
+            }
+        ]
+    }
+}

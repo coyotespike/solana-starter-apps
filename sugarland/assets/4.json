@@ -1,0 +1,28 @@
+{
+    "name": "Alexander Hamilton",
+    "symbol": "FOUND",
+    "description": "The Founding Fathers rocked.",
+    "image": "4.jpeg",
+    "attributes": [
+        {
+            "trait_type": "accessory",
+            "value": "tie"
+        },
+        {
+            "trait_type": "accessory",
+            "value": "laptop"
+        },
+        {
+            "trait_type": "books",
+            "value": "brown"
+        }
+    ],
+    "properties": {
+        "files": [
+            {
+                "uri": "4.jpeg",
+                "type": "image/jpeg"
+            }
+        ]
+    }
+}

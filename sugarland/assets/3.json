@@ -1,0 +1,28 @@
+{
+    "name": "Ben Franklin",
+    "symbol": "FOUND",
+    "description": "The Founding Fathers rocked.",
+    "image": "3.jpeg",
+    "attributes": [
+        {
+            "trait_type": "accessory",
+            "value": "monitor"
+        },
+        {
+            "trait_type": "chair",
+            "value": "yellow"
+        },
+        {
+            "trait_type": "papers",
+            "value": "white"
+        }
+    ],
+    "properties": {
+        "files": [
+            {
+                "uri": "3.jpeg",
+                "type": "image/jpeg"
+            }
+        ]
+    }
+}
