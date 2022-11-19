@@ -21,7 +21,7 @@ export const FetchCandyMachine: FC = () => {
 
     try {
       const candyMachine = await metaplex
-        .candyMachinesV2()
+        .candyMachines()
         .findByAddress({ address: new PublicKey(candyMachineAddress) });
 
       setCandyMachineData(candyMachine);
@@ -32,9 +32,10 @@ export const FetchCandyMachine: FC = () => {
 
   // slice items array into chunks of 10
   const getPage = async (page, perPage) => {
-    const pageItems = await candyMachineData
-      .items()
-      .slice((page - 1) * perPage, page * perPage);
+    const pageItems = candyMachineData.items.slice(
+      (page - 1) * perPage,
+      page * perPage
+    );
     let nftData = [];
     await Promise.all(
       nfts.map(async (nft) => {
@@ -59,6 +60,19 @@ export const FetchCandyMachine: FC = () => {
     setPage(page + 1);
   };
 
+  // fetch candy machine data on load
+  useEffect(() => {
+    fetchCandyMachine();
+  }, []);
+
+  // fetch items when candy machine data is available
+  useEffect(() => {
+    if (!candyMachineData.items) {
+      return;
+    }
+    getPage(page, 10);
+  }, [candyMachineData, page]);
+
   return (
     <div>
       <input
@@ -76,7 +90,9 @@ export const FetchCandyMachine: FC = () => {
 
       {candyMachineData && (
         <div className="flex flex-col items-center justify-center p-5">
-          <ul>Candy Machine Address: {candyMachineData.address.toString()}</ul>
+          <ul>
+            Candy Machine Address: {candyMachineData?.address?.toString()}
+          </ul>
         </div>
       )}
 
