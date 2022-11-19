@@ -1,22 +1,63 @@
-import { useConnection } from "@solana/wallet-adapter-react"
-import { PublicKey } from "@solana/web3.js"
-import { Metaplex } from "@metaplex-foundation/js"
-import { FC, useEffect, useState } from "react"
-import styles from "../styles/custom.module.css"
+import { useConnection } from "@solana/wallet-adapter-react";
+import { PublicKey } from "@solana/web3.js";
+import { Metaplex } from "@metaplex-foundation/js";
+import { FC, useEffect, useState } from "react";
+import styles from "../styles/custom.module.css";
 
 export const FetchCandyMachine: FC = () => {
-  const [candyMachineAddress, setCandyMachineAddress] = useState(null)
-  const [candyMachineData, setCandyMachineData] = useState(null)
-  const [pageItems, setPageItems] = useState(null)
-  const [page, setPage] = useState(1)
+  const [candyMachineAddress, setCandyMachineAddress] = useState(
+    "6mmBfcPHvEkW7oXFVvKKqHWwQLJ5NxFvYECvSLWi6AUw"
+  );
+  const [candyMachineData, setCandyMachineData] = useState(null);
+  const [pageItems, setPageItems] = useState(null);
+  const [page, setPage] = useState(1);
 
-  const fetchCandyMachine = async () => {}
+  const { connection } = useConnection();
+  const metaplex = Metaplex.make(connection);
 
-  const getPage = async (page, perPage) => {}
+  const fetchCandyMachine = async () => {
+    // because we will be fetching a new candy machine, start with a clean slate
+    setPage(1);
 
-  const prev = async () => {}
+    try {
+      const candyMachine = await metaplex
+        .candyMachinesV2()
+        .findByAddress({ address: new PublicKey(candyMachineAddress) });
 
-  const next = async () => {}
+      setCandyMachineData(candyMachine);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // slice items array into chunks of 10
+  const getPage = async (page, perPage) => {
+    const pageItems = await candyMachineData
+      .items()
+      .slice((page - 1) * perPage, page * perPage);
+    let nftData = [];
+    await Promise.all(
+      nfts.map(async (nft) => {
+        let fetchResult = await fetch(nft.uri);
+        let json = await fetchResult.json();
+        nftData.push(json);
+      })
+    );
+
+    setPageItems(nftData);
+  };
+
+  const prev = async () => {
+    if (page - 1 < 1) {
+      setPage(1);
+    } else {
+      setPage(page - 1);
+    }
+  };
+
+  const next = async () => {
+    setPage(page + 1);
+  };
 
   return (
     <div>
@@ -64,5 +105,5 @@ export const FetchCandyMachine: FC = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
