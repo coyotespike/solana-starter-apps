@@ -1,6 +1,9 @@
 # solana-starter-apps
 A collection of apps building with Solana. These are all based on Buildspace tutorials!
 
+## getting started
+It's easy to run `npx create-solana-client <name> --initialize-keypair`. This was used for the `simple-script` repo, for instance. It creates a simple ts-node repo with dotenv and the solana libraries spl-token and web3.js already installed. Most of the others are basically create-react-app/NextJS repos.
+
 ## Structuring a monorepo
 
 - in my head, you can add a git repo as a folder inside another git repo. It won't have its own URL but you can clone only the nested repo, and track its history independently of the first. However, **outside my head, this is utterly impossible**.

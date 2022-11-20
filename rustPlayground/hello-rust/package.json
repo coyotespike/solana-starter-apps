@@ -1,0 +1,22 @@
+{
+  "name": "hello-rust",
+  "version": "1.0.0",
+  "description": "",
+  "main": "client-ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node src/client.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@solana/web3.js": "^1.66.2",
+    "dotenv": "^16.0.3",
+    "fs": "^0.0.1-security"
+  },
+  "devDependencies": {
+      "typescript": "^4.9.3",
+      "ts-node": "^10.8.0"
+  }
+}
