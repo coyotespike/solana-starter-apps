@@ -21,3 +21,13 @@ https://explorer.solana.com/tx/3a4x5gz3YWJGQgXUC6M8PgmCHz1yHZbGjtzJt5uLTzzm3kLpJ
 I used my prior art from the simple-client script folder to call the program.
 
 https://explorer.solana.com/tx/2tYih9QxXuUTFdqLnxTy81HSkXxp3Ver95C2Byd2V4DuKtf86g9HAM51DnRhsVfTNdjEQbrcbEMqfw4ToVh1rVsX?cluster=devnet
+
+
+## Next
+4Urzd4Y2of3jjCDo9uGCqZxYSwP7WHhXtwgbxQrpYNKx
+https://explorer.solana.com/address/4Urzd4Y2of3jjCDo9uGCqZxYSwP7WHhXtwgbxQrpYNKx?cluster=devnet
+
+## Gotchas
+Quite a painful experience. My Rust enum had an id, u64. On the client side, at first Borsh would not serialize a siple number, finally I converted it with new BN. But then the instruction still failed when sent to the Solana program/smart contract.
+
+I just removed the ID, re-deployed under a new name (otherwise I am not sure it updates the program), and finally tried again. Success!

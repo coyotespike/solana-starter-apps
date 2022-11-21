@@ -29,55 +29,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const web3 = __importStar(require("@solana/web3.js"));
-const borsh = __importStar(require("@project-serum/borsh"));
 const initializeKeypair_1 = require("./initializeKeypair");
-const noteInstructionLayout = borsh.struct([
-    borsh.u8("variant"),
-    borsh.str("title"),
-    borsh.str("body"),
-    borsh.u8("id"),
-]);
-function createNote(signer, programId, connection) {
+const programId = new web3.PublicKey("CP6ET2sewmoBvmhPwFcUDbiAGRMjQ1jeVE3xd2KMHCNR");
+function sayHello(connection, payer) {
     return __awaiter(this, void 0, void 0, function* () {
-        let buffer = Buffer.alloc(1000);
-        let title = "Hello World";
-        let body = "This is a note";
-        // let id = anchor.BN(1);
-        let id = new borsh.u64(1);
-        noteInstructionLayout.encode({ variant: 0, title, body, id }, buffer);
-        const fittedBuffer = buffer.slice(0, noteInstructionLayout.getSpan(buffer));
-        const [pda] = yield web3.PublicKey.findProgramAddress([signer.publicKey.toBuffer(), Buffer.from(title)], programId);
-        console.log("PDA: ", pda.toBase58());
         const transaction = new web3.Transaction();
         const instruction = new web3.TransactionInstruction({
+            keys: [],
             programId,
-            data: fittedBuffer,
-            keys: [
-                { pubkey: signer.publicKey, isSigner: true, isWritable: false },
-                { pubkey: pda, isSigner: false, isWritable: true },
-                {
-                    pubkey: web3.SystemProgram.programId,
-                    isSigner: false,
-                    isWritable: false,
-                },
-            ],
         });
         transaction.add(instruction);
-        const tx = yield web3.sendAndConfirmTransaction(connection, transaction, [
-            signer,
-        ]);
-        console.log(`https://explorer.solana.com/tx/${tx}?cluster=devnet`);
-        return tx;
+        const transactionSignature = yield web3.sendAndConfirmTransaction(connection, transaction, [payer]);
+        return transactionSignature;
     });
 }
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         const connection = new web3.Connection(web3.clusterApiUrl("devnet"));
-        const programId = new web3.PublicKey("4Urzd4Y2of3jjCDo9uGCqZxYSwP7WHhXtwgbxQrpYNKx");
         const wallet = yield initializeKeypair_1.initializeKeypair(connection);
         yield initializeKeypair_1.airdropSolIfNeeded(wallet, connection);
-        const transactionSignature = yield createNote(wallet, programId, connection);
+        const transactionSignature = yield sayHello(connection, wallet);
+        console.log(`Transaction: https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`);
     });
 }
 main();
-//# sourceMappingURL=client.js.map
+//# sourceMappingURL=helloClient.js.map
