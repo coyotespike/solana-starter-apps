@@ -10,5 +10,6 @@ borsh = "0.9.3"
 solana-program = "1.14.7"
 
 [lib]
-name = "noter"
+name = "intro"
+path = "src/studentIntro.rs"
 crate-type = ["cdylib", "lib"]

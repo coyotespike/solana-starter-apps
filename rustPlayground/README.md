@@ -31,3 +31,7 @@ https://explorer.solana.com/address/4Urzd4Y2of3jjCDo9uGCqZxYSwP7WHhXtwgbxQrpYNKx
 Quite a painful experience. My Rust enum had an id, u64. On the client side, at first Borsh would not serialize a siple number, finally I converted it with new BN. But then the instruction still failed when sent to the Solana program/smart contract.
 
 I just removed the ID, re-deployed under a new name (otherwise I am not sure it updates the program), and finally tried again. Success!
+
+## Program from scratch
+HXvmw6ZPPw2BnGzaGdUErRwUtfocnvAqiuEpbSBBRThZ
+https://explorer.solana.com/address/HXvmw6ZPPw2BnGzaGdUErRwUtfocnvAqiuEpbSBBRThZ?cluster=devnet
