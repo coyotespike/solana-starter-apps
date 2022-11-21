@@ -15,7 +15,7 @@ pub mod notes;
 use notes::{NoteInstruction};
 use state::NoteAccountState;
 use borsh::BorshSerialize;
-
+use crate::error::ReviewError;
 
 // declare and export the program's entrypoint
 entrypoint!(process_instruction);
@@ -79,12 +79,30 @@ pub fn add_note(
     let pda_account = next_account_info(account_info_iter)?;
     let system_program = next_account_info(account_info_iter)?;
 
+    if !initializer.is_signer {
+        msg!("Error: Initializer must sign transaction");
+        return Err(NoteError::MissingRequiredSignature);
+    }
+
     // remember the client does this too
-    let (_pda, bump_seed) = Pubkey::find_program_address(&[initializer.key.as_ref(), title.as_bytes().as_ref(),], program_id);
+    let (pda, bump_seed) = Pubkey::find_program_address(&[initializer.key.as_ref(), title.as_bytes().as_ref(),], program_id);
+
+    // check if the pda account is owned by the program
+    if pda != *pda_account.key {
+        msg!("Error: PDA account does not match");
+        // what does the into() do? A: converts the error into a ProgramResult
+        return Err(ReviewError::InvalidPDA.into());
+    }
 
 
     // Calculate account size
     let account_len : usize = 1 + 1 + (4 + title.len()) + (4 + body.len());
+
+    // check length of account
+    if account_len > 1000 {
+        msg!("Error: Account size is too large");
+        return Err(ReviewError::InvalidDataLength.into());
+    }
 
     // calculate rent
     let rent = Rent::get()?;
@@ -128,7 +146,7 @@ pub fn add_note(
 
 pub fn update_note(
     _program_id: &Pubkey,
-    _accounts: &[AccountInfo],
+    accounts: &[AccountInfo],
     title: String,
     body: String,
 ) -> ProgramResult {
@@ -138,16 +156,66 @@ pub fn update_note(
     msg!("Body: {}", body);
 
     // gracefully exit the program
+    // iterate through the accounts
+    let account_info_iter = &mut accounts.iter();
+
+    // get the accounts
+    let initializer = next_account_info(account_info_iter)?;
+    let pda_account = next_account_info(account_info_iter)?;
+
+    // check if pda_account.owner is the program_id
+    if pda_account.owner != program_id {
+        msg!("Error: PDA account does not match");
+        return Err(ReviewError::IllegalOwner);
+    }
+
+    // check if signer is the initializer
+    if !initializer.is_signer {
+        msg!("Error: Initializer must sign transaction");
+        return Err(ReviewError::MissingRequiredSignature);
+    }
+
+    // unpack the account data
+    let mut account_data = try_from_slice_unchecked::<NoteAccountState>(&pda_account.data.borrow()).unwrap();
+    msg!("Borrowed account data");
+
+    let (bump_seed, pda) = Pubkey::find_program_address(&[initializer.key.as_ref(), account_data.title.as_bytes().as_ref(),], program_id);
+
+    // check if the pda account is owned by the program
+    if pda != *pda_account.key {
+        msg!("Error: PDA account does not match. check seeds.");
+        return Err(ReviewError::InvalidPDA.into());
+    }
+
+    // check if the account is initialized
+    if !account_data.is_initialized {
+        msg!("Error: Account is not initialized");
+        return Err(ReviewError::UninitializedAccount.into());
+    }
+
+    // check data length
+    let account_len : usize = 1 + 1 + (4 + title.len()) + (4 + body.len());
+    if account_len > 1000 {
+        msg!("Error: Account size is too large");
+        return Err(ReviewError::InvalidDataLength.into());
+    }
+
+
+    // update the account data
+    account_data.title = title;
+    account_data.body = body;
+
+    // serialize the account data
+    account_data.serialize(&mut &mut pda_account.data.borrow_mut()[..])?;
+
     Ok(())
 }
 
 pub fn delete_note(
     _program_id: &Pubkey,
     _accounts: &[AccountInfo],
-    title: String,
+    _title: String,
 ) -> ProgramResult {
-
-    msg!("Deleting a note: {}", title);
 
     // gracefully exit the program
     Ok(())

@@ -8,8 +8,9 @@ edition = "2021"
 [dependencies]
 borsh = "0.9.3"
 solana-program = "1.14.7"
+thiserror = "1.0.37"
 
 [lib]
 name = "intro"
-path = "src/studentIntro.rs"
+path = "src/student_intros/lib.rs"
 crate-type = ["cdylib", "lib"]
