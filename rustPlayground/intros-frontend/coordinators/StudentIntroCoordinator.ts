@@ -7,22 +7,9 @@ export class StudentIntroCoordinator {
   static accounts: web3.PublicKey[] = [];
 
   static async prefetchAccounts(connection: web3.Connection, search: string) {
+    const offset = 4 + 6 + 1 + 32 + 1 + 4;
     const accounts = await connection.getProgramAccounts(
-      new web3.PublicKey(STUDENT_INTRO_PROGRAM_ID),
-      {
-        dataSlice: { offset: 1, length: 12 },
-        filters:
-          search === ""
-            ? []
-            : [
-                {
-                  memcmp: {
-                    offset: 5,
-                    bytes: bs58.encode(Buffer.from(search)),
-                  },
-                },
-              ],
-      }
+      new web3.PublicKey(STUDENT_INTRO_PROGRAM_ID)
     );
 
     accounts.sort((a, b) => {

@@ -1,8 +1,8 @@
 use solana_program::{
+    account_info::{next_account_info, AccountInfo},
     entrypoint::ProgramResult,
     pubkey::Pubkey,
     msg,
-    account_info::{next_account_info, AccountInfo},
     system_instruction,
     program_error::ProgramError,
     sysvar::{rent::Rent, Sysvar},

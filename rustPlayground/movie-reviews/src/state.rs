@@ -57,12 +57,20 @@ pub struct MovieCommentCounter {
     pub counter: u64,
 }
 
+
+impl Sealed for MovieCommentCounter{}
+
 // why do we need to implement this for the is_initialized bool?
 impl IsInitialized for MovieCommentCounter {
     fn is_initialized(&self) -> bool {
         self.is_initialized
     }
 }
+impl MovieCommentCounter {
+    pub const DISCRIMINATOR: &'static str = "counter";
+    pub const SIZE: usize = (4 + MovieCommentCounter::DISCRIMINATOR.len()) + 1 + 8;
+}
+
 
 #[derive(BorshSerialize, BorshDeserialize)]
 pub struct MovieComment {
@@ -93,10 +101,3 @@ impl MovieComment {
         + 8; // 8 bytes for the count (u64)
     }
 }
-
-impl MovieCommentCounter {
-    pub const DISCRIMINATOR: &'static str = "counter";
-    pub const SIZE: usize = (4 + MovieCommentCounter::DISCRIMINATOR.len()) + 1 + 8;
-}
-
-impl Sealed for MovieCommentCounter{}

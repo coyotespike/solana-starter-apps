@@ -43,7 +43,9 @@ impl ReplyCounterState {
     pub const DISCRIMINATOR: &'static str = "counter";
 
     // lil convenience method
-    pub const SIZE: usize = (4 + ReplyCounterState::DISCRIMINATOR.len());
+    pub const SIZE: usize = (4 + ReplyCounterState::DISCRIMINATOR.len()  // 4 bytes to store the size of the subsequent dynamic data (string)
+        + 1  // 1 byte for is_initialized (boolean)
+        + 8); // 8 bytes for the count
 }
 
 impl Sealed for ReplyCounterState {}
