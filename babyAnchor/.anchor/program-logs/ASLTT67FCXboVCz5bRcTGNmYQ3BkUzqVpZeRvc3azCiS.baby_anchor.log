@@ -1,0 +1,52 @@
+Streaming transaction logs mentioning ASLTT67FCXboVCz5bRcTGNmYQ3BkUzqVpZeRvc3azCiS. Confirmed commitment
+Transaction executed in slot 3:
+  Signature: 4P17zM1n6xL53LCPqDwBjvExASL7UUP4RxD6C4SP5oCpoeyoGgqyRsjo87suDaJrnE8K4scaR7jtH5cZgQmZz26L
+  Status: Ok
+  Log Messages:
+    Program ASLTT67FCXboVCz5bRcTGNmYQ3BkUzqVpZeRvc3azCiS invoke [1]
+    Program log: Instruction: Initialize
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program log: Initialized counter to 0: 0
+    Program ASLTT67FCXboVCz5bRcTGNmYQ3BkUzqVpZeRvc3azCiS consumed 7647 of 200000 compute units
+    Program ASLTT67FCXboVCz5bRcTGNmYQ3BkUzqVpZeRvc3azCiS success
+Transaction executed in slot 3:
+  Signature: 27FkdUYtEdCQ4tDfwsEHdEuRtswfj1XqswUrDwGt8ACVthF1GWa5xcLrdmNk6sje4VhGhZXVRwwQMpozG4ryWYSY
+  Status: Ok
+  Log Messages:
+    Program ASLTT67FCXboVCz5bRcTGNmYQ3BkUzqVpZeRvc3azCiS invoke [1]
+    Program log: Instruction: Increment
+    Program log: Previous count: 0
+    Program log: Incremented counter to: 1
+    Program ASLTT67FCXboVCz5bRcTGNmYQ3BkUzqVpZeRvc3azCiS consumed 3202 of 200000 compute units
+    Program ASLTT67FCXboVCz5bRcTGNmYQ3BkUzqVpZeRvc3azCiS success
+Transaction executed in slot 4:
+  Signature: 27FkdUYtEdCQ4tDfwsEHdEuRtswfj1XqswUrDwGt8ACVthF1GWa5xcLrdmNk6sje4VhGhZXVRwwQMpozG4ryWYSY
+  Status: Ok
+  Log Messages:
+    Program ASLTT67FCXboVCz5bRcTGNmYQ3BkUzqVpZeRvc3azCiS invoke [1]
+    Program log: Instruction: Increment
+    Program log: Previous count: 0
+    Program log: Incremented counter to: 1
+    Program ASLTT67FCXboVCz5bRcTGNmYQ3BkUzqVpZeRvc3azCiS consumed 3202 of 200000 compute units
+    Program ASLTT67FCXboVCz5bRcTGNmYQ3BkUzqVpZeRvc3azCiS success
+Transaction executed in slot 4:
+  Signature: LDCJ5WGXU7MbQxv35JqCcJoGf1jYorjTZLYxT8hqsnYPJ6bJGJjzPsaifQoEJtFxmumVqVPyK9s89Wu5JpQ6CCj
+  Status: Ok
+  Log Messages:
+    Program ASLTT67FCXboVCz5bRcTGNmYQ3BkUzqVpZeRvc3azCiS invoke [1]
+    Program log: Instruction: Decrement
+    Program log: Previous count: 1
+    Program log: Decremented counter to: 0
+    Program ASLTT67FCXboVCz5bRcTGNmYQ3BkUzqVpZeRvc3azCiS consumed 3203 of 200000 compute units
+    Program ASLTT67FCXboVCz5bRcTGNmYQ3BkUzqVpZeRvc3azCiS success
+Transaction executed in slot 5:
+  Signature: LDCJ5WGXU7MbQxv35JqCcJoGf1jYorjTZLYxT8hqsnYPJ6bJGJjzPsaifQoEJtFxmumVqVPyK9s89Wu5JpQ6CCj
+  Status: Ok
+  Log Messages:
+    Program ASLTT67FCXboVCz5bRcTGNmYQ3BkUzqVpZeRvc3azCiS invoke [1]
+    Program log: Instruction: Decrement
+    Program log: Previous count: 1
+    Program log: Decremented counter to: 0
+    Program ASLTT67FCXboVCz5bRcTGNmYQ3BkUzqVpZeRvc3azCiS consumed 3203 of 200000 compute units
+    Program ASLTT67FCXboVCz5bRcTGNmYQ3BkUzqVpZeRvc3azCiS success
