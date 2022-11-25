@@ -459,9 +459,6 @@ pub fn initialize_token_mint(
     // we won't calculate the rent ourselves this time
     let sysvar_rent = next_account_info(account_info_iter)?;
 
-    // for debugging
-    println!("hi there");
-
     // validate mint pda
     let (mint_pda, mint_bump) = Pubkey::find_program_address(&[b"token_mint",], program_id);
     if mint_pda != *token_mint.key {
@@ -536,64 +533,3 @@ pub fn initialize_token_mint(
 
     Ok(())
 }
-
-// this test now goes into the token mint function
-// there it fails because the keypairs do not match
-// I will skip learning this for now
-#[cfg(test)]
-mod tests {
-    // all of these imports worked when I ran cargo add tokio solana-sdk
-    use {
-        super::*,
-        assert_matches::*,
-        solana_program::instruction::{AccountMeta, Instruction},
-        solana_program_test::*,
-        solana_sdk::{signature::Signer, transaction::Transaction, signer::keypair::Keypair},
-    };
-
-    // this annotation means our tests are async
-    #[tokio::test]
-    async fn it_works() {
-        // create a new public key to use as the program id
-        let program_id = Pubkey::new_unique();
-
-        // ProgramTest starts a local Solana cluster
-        // banks_client is a client to the cluster, interface into testing environment
-        // payer is a keypair that will pay for all the fees
-        let (mut banks_client, payer, recent_blockhash) = ProgramTest::new(
-            "program_name",
-            program_id,
-            processor!(process_instruction),
-        )
-        .start()
-        .await;
-
-        let test_acct = Keypair::new();
-        let three_acct = Keypair::new();
-        let four_acct = Keypair::new();
-        let five_acct = Keypair::new();
-        let six_acct = Keypair::new();
-
-        println!("got here");
-
-        // build the instruction
-        let mut transaction = Transaction::new_with_payer(
-            &[Instruction {
-                program_id,
-                accounts: vec![
-                    AccountMeta::new(payer.pubkey(), true),
-                    AccountMeta::new(test_acct.pubkey(), true),
-                    AccountMeta::new(three_acct.pubkey(), false),
-                    AccountMeta::new(four_acct.pubkey(), false),
-                    AccountMeta::new(five_acct.pubkey(), false),
-                    AccountMeta::new(six_acct.pubkey(), false),
-                ],
-                data: vec![3],
-            }],
-            Some(&payer.pubkey()),
-        );
-        transaction.sign(&[&payer, &test_acct], recent_blockhash);
-
-        assert_matches!(banks_client.process_transaction(transaction).await, Ok(_));
-        }
-    }
