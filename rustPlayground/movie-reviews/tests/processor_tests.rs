@@ -122,3 +122,9 @@ async fn test_add_movie_review_instruction() {
     // Process transaction and compare the result
     assert_matches!(banks_client.process_transaction(transaction).await, Ok(_));
 }
+
+// async fn test_add_comment_instruction() {
+//     // Call helper functions
+//     let (mut banks_client, payer, recent_blockhash, program_id) = utils::setup().await;
+//     let (_mint, _mint_auth, init_mint_ix) = utils::create_init_mint_ix(payer.pubkey(), program_id);
+// }
