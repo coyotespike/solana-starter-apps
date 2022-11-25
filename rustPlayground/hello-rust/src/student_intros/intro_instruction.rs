@@ -24,7 +24,12 @@ pub enum IntroInstruction {
     },
     DeleteIntro {
         name: String,
-    }
+        msg: String,
+    },
+    AddReply {
+        name: String,
+        msg: String,
+    },
 }
 
 // borsh is adding support for deserialization. It has added the functions necessary for us.
@@ -47,6 +52,7 @@ impl IntroInstruction {
 
         // Take the first byte as the variant to determine which instruction to execute
         // ok_or will return an error if the slice is empty
+        // i also think this will return an error if the clietn just sends the name for DeleteIntro
         let (&variant, rest) = input.split_first().ok_or(ProgramError::InvalidInstructionData)?;
 
         // we got try_from_slice from the BorshDeserialize trait
@@ -65,6 +71,11 @@ impl IntroInstruction {
             },
             2 => Self::DeleteIntro {
                 name: payload.name,
+                msg: payload.msg,
+            },
+            3 => Self::AddReply {
+                name: payload.name,
+                msg: payload.msg,
             },
             _ => return Err(ProgramError::InvalidInstructionData)
         })
