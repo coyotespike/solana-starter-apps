@@ -17,9 +17,7 @@ import {
 } from "@chakra-ui/react";
 import * as web3 from "@solana/web3.js";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-
-const STUDENT_INTRO_PROGRAM_ID = "HXvmw6ZPPw2BnGzaGdUErRwUtfocnvAqiuEpbSBBRThZ";
-// const STUDENT_INTRO_PROGRAM_ID = "Dyb29zT6FN9qKx3dXZKeF6QP66JFKHUkYP4dv9WFD1UE";
+import { STUDENT_INTRO_PROGRAM_ID } from "../utils/constants";
 
 export const Form: FC = () => {
   const [name, setName] = useState("");
@@ -51,6 +49,12 @@ export const Form: FC = () => {
       new web3.PublicKey(STUDENT_INTRO_PROGRAM_ID)
     );
 
+    // find the pda counter address
+    const [pdaCounter] = await web3.PublicKey.findProgramAddress(
+      [pda.toBuffer(), Buffer.from("reply")],
+      new web3.PublicKey(STUDENT_INTRO_PROGRAM_ID)
+    );
+
     const instruction = new web3.TransactionInstruction({
       keys: [
         {
@@ -67,6 +71,11 @@ export const Form: FC = () => {
           pubkey: web3.SystemProgram.programId,
           isSigner: false,
           isWritable: false,
+        },
+        {
+          pubkey: pdaCounter,
+          isSigner: false,
+          isWritable: true,
         },
       ],
       data: buffer,
