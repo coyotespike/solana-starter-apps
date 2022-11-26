@@ -1,6 +1,6 @@
 import * as anchor from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor";
-import { expect } from "chai";
+import { expect, assert } from "chai";
 import { MovieReview } from "../target/types/movie_review";
 
 describe("movieReview", () => {
@@ -47,5 +47,21 @@ describe("movieReview", () => {
     expect(account.rating).to.eq(1);
     expect(account.description).to.eq("the first one was the best though");
     expect(account.reviewer).to.eql(provider.wallet.publicKey);
+  });
+
+  it("Close a movie review", async () => {
+    const tx = await program.methods
+      .closeMovieReview()
+      .accounts({
+        movieReview: movie_pda,
+      })
+      .rpc();
+
+    try {
+      await program.account.movieAccountState.fetch(movie_pda);
+    } catch (err) {
+      // the error message includes the account address
+      expect(err.message).to.have.string("Account does not exist");
+    }
   });
 });

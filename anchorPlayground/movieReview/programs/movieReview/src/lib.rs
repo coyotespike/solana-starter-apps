@@ -47,6 +47,12 @@ pub mod movie_review {
 
         Ok(())
     }
+
+    pub fn close_movie_review(_ctx: Context<CloseMovieReview>) -> Result<()> {
+        msg!("Closing movie review");
+        Ok(())
+    }
+
 }
 
 // Step 3: Define validation and context for the program
@@ -83,6 +89,15 @@ pub struct UpdateMovieReview<'info> {
     #[account(mut)] // implements all
     pub initializer: Signer<'info>,
     pub system_program: Program<'info, System>,
+}
+
+#[derive(Debug)]
+#[derive(Accounts)]
+pub struct CloseMovieReview<'info> {
+    #[account(mut, close = reviewer, has_one = reviewer)] // CPI to system program: close_account
+    pub movie_review: Account<'info, MovieAccountState>, // what to validate against. Checks owner too.
+    #[account(mut)] // implements all
+    reviewer: Signer<'info>,
 }
 
 // Step 1: Define the state of the program
