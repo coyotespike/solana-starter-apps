@@ -30,6 +30,7 @@ pub mod baby_anchor {
     }
 }
 
+
 // validation
 #[derive(Accounts)]
 pub struct Initialize<'info> {

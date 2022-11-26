@@ -22,7 +22,7 @@ pub mod baby_anchor {
 // context is a struct that contains the following fields:
   // the program id
   // accounts: deserialized accounts
-  // remainng_accounts:  not deserialized OR VALIDATED. basically don't use.
+  // remaining_accounts:  not deserialized OR VALIDATED. basically don't use.
   // bump seeds found during constraint validation. BTreeMap. no need to recalculate inside instruction handlers
 
 // the lifetime of the context is the lifetime of all properties which are denoted with a lifetime
