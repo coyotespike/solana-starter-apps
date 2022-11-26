@@ -1,6 +1,7 @@
 import * as anchor from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor";
 import { expect, assert } from "chai";
+import { getAssociatedTokenAddress, getAccount } from "@solana/spl-token";
 import { MovieReview } from "../target/types/movie_review";
 
 describe("movieReview", () => {
@@ -18,12 +19,47 @@ describe("movieReview", () => {
     [Buffer.from(movie.title), provider.wallet.publicKey.toBuffer()],
     program.programId
   );
+  const [mint] = anchor.web3.PublicKey.findProgramAddressSync(
+    [Buffer.from("mint")],
+    program.programId
+  );
+
+  xit("Initializes the mint maybe", async () => {
+    const tokenAccount = await getAssociatedTokenAddress(
+      mint,
+      provider.wallet.publicKey
+    );
+
+    const tx = await program.methods
+      .createRewardMint("fakeUri", "tim", "TIM")
+      .accounts({
+        rewardMint: mint,
+        metadata: tokenAccount,
+        tokenMetadataProgram: anchor.web3.SystemProgram.programId,
+      })
+      .rpc();
+  });
+
+  it("Initializes the reward token", async () => {
+    const tx = await program.methods
+      .initializeTokenMint()
+      .accounts({
+        mint,
+      })
+      .rpc();
+  });
+
   it("Adds a movie review", async () => {
-    // movieReview because we have pub movie_review in the method validation
+    const tokenAccount = await getAssociatedTokenAddress(
+      mint,
+      provider.wallet.publicKey
+    );
     const tx = await program.methods
       .addMovieReview(movie.title, movie.description, movie.rating)
       .accounts({
         movieReview: movie_pda,
+        rewardMint: mint,
+        tokenAccount,
       })
       .rpc();
 
@@ -32,6 +68,9 @@ describe("movieReview", () => {
     expect(account.description).to.equal(movie.description);
     expect(account.rating).to.equal(movie.rating);
     expect(account.reviewer).to.eql(provider.wallet.publicKey);
+
+    const tokens = await getAccount(provider.connection, tokenAccount);
+    expect(tokens.amount).to.equal(10000000n);
   });
 
   it("Updates a movie review", async () => {
